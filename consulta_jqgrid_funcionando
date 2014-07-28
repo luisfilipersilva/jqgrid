@@ -1,0 +1,105 @@
+<div id='divFormValidar'>
+	<?=$this->divFormValidar;?>
+
+<script type="text/javascript">
+var mydata = [
+              <?php foreach ($this->blocos as $bloco) { ?>
+                      <?php 
+                      	$id = $bloco->getIdBloco( );
+						$bloco_central = new Application_Model_BlocoCentralMapper( );
+						$central = $bloco_central->pegarcentraldosblocos($id);
+						
+						$capacidade = $bloco->getCapacidade( );
+						$usado = $bloco->getUsado( );
+						$livre  = $capacidade - $usado;
+
+//						$rec = $bloco->getAposrec("apos");
+//						
+//						print_r($rec);
+						
+						$perc = ( $usado * 100 ) / $capacidade;
+						$livre = number_format($perc);?>						
+							
+					  <?php	$blocoid 		= $bloco->getIdBloco("id");?>
+					  <?php	$bloconome 		= $bloco->getNome("nome");?>
+                      <?php $blococentral 	= $bloco->getIdBloco("central");?>
+                      <?php $blocotec 		= $bloco->getTecnologia_idTecnologia("tecnologia");?>
+                      <?php $blococap		= $bloco->getCapacidade("capacidade");?>
+                      <?php $blocousado		= $bloco->getUsado("usado");?>
+                      <?php $bloconoapos 	= $bloco->getNome("apos");?>
+                      
+                      <?php echo"{id:".chr(34).$blocoid.chr(34). 
+                      			",nome:".chr(34).$bloconome.chr(34).
+                        		",central:".chr(34).$central.chr(34).
+                        		",tecnologia:".chr(34).$blocotec.chr(34).
+                        		",capacidade:".chr(34).$blococap.chr(34).
+                        		",usado:".chr(34).$blocousado.chr(34).
+                        		",livre:".chr(34).$livre.chr(34).
+                        		",apos:".chr(34).$bloconoapos.chr(34)."},"; ?>
+              <?php } ?>
+                  ];
+	
+//for(var i=0;i<=mydata.length;i++)
+ //   jQuery("#list4").addRowData(i+1,mydata[i]);
+
+jQuery("#list47").jqGrid({
+	data: mydata,
+	datatype: "local",
+	sortable: true,
+	height: 400,
+	width: 960,
+	rowNum: 20,
+	//shrinkToFit: false,
+	//forceFit: false,
+	autowidth: false,
+	rowList: [10,20,30],
+   	colNames:[' ','ID','Nome','Central Vinculada', 'Tecnologia', 'Capacidade','Usado','Livre','Apos Recomendação'],
+   	colModel:[
+		{name: 'myac', width:80, fixed:true, sortable:false, resize:false, formatter:'actions',
+			formatoptions:{keys:true}},
+		{name:'id',index:'id', width:60, sorttype:"int",key:true},
+   		{name:'nome',index:'nome', width:60, sorttype:"int"},
+   		{name:'central',index:'central', width:90, sorttype:"int"},
+   		{name:'tecnologia',index:'tecnologia', width:100},
+   		{name:'capacidade',index:'usado', width:80, align:"right",sorttype:"float"},
+   		{name:'usado',index:'usado', width:80, align:"right",sorttype:"float"},		
+   		{name:'livre',index:'livre', width:80,align:"right",sorttype:"float"},		
+   		{name:'apos',index:'apos', width:90, sorttype:"int"}
+   	],
+   	sortname: "Nome",
+	sortorder: "asc",
+	loadui: "block",
+   	pager: "#plist47",
+   	viewrecords: true,
+   	caption: "TABELA DE CONSULTA - BLOCOS"
+});
+
+jQuery("#list47").jqGrid('navGrid','#plist47',{add:false,edit:false,del:false});
+jQuery("#list47").jqGrid('navButtonAdd','#plist47',{
+    caption: "",
+    title: "Reordenar Colunas",
+    onClickButton : function (){
+		jQuery("#list47").jqGrid('columnChooser');
+    }
+});
+jQuery("#list47").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
+jQuery("#list47").jqGrid('navGrid','#list47',{edit:false,add:false,del:false});
+
+//-->
+</script>
+	<table border="0">
+		<tr>
+			<td>
+				<table border="0">
+					<tr>
+						<td align="center">
+							<table id="list47"></table>
+							<div id="filterBar" ></div>
+							<div id="plist47"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
